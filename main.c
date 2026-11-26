@@ -7,24 +7,33 @@ struct Book {
     char title[10];
 };
 
-int main(void) {
-    struct Book *p;
+void main(void) {
+    int i;
+    struct Book **bookshelf;
 
-    p = (struct Book *)malloc(2 * sizeof(struct Book)); //p = malloc(2 * sizeof(struct Book)); 이렇게 써도 되나 type casting을 해준 버전
-    if (p == NULL) {
-        printf("error\n");
-        return 1;
+    // 1) 포인터 3개(행 3개) 동적 할당
+    bookshelf = (struct Book **)malloc(3 * sizeof(struct Book *));
+    if (bookshelf == NULL) {
+        return;
     }
 
-    p->number = 1;
-    strcpy(p->title, "C Programming");
+    // 2) 각 행마다 Book 구조체 10개(열 10개) 동적 할당
+    for (i = 0; i < 3; i++) {
+        bookshelf[i] = (struct Book *)malloc(10 * sizeof(struct Book));
+    }
 
-    (p + 1)->number = 2;
-    strcpy((p + 1)->title, "Electronics");
+    // 3) 데이터 저장 및 출력
+    bookshelf[1][3].number = 5;
+    strcpy(bookshelf[1][3].title, "C++ Programming");
 
-    printf("Book 1: %d, %s\n", p->number, p->title);
-    printf("Book 2: %d, %s\n", (p + 1)->number, (p + 1)->title);
-    
-    free(p);
-    return 0;
+    (bookshelf[2] + 4)->number = 3;
+    strcpy((bookshelf[2] + 4)->title, "Communications Theory");
+
+    printf("book (1,3) : %i, %s\n", (bookshelf[1] + 3)->number, (bookshelf[1] + 3)->title);
+    printf("book (2,4) : %i, %s\n", bookshelf[2][4].number, bookshelf[2][4].title);
+
+    // 4) 2차원 구조체 메모리 반납
+    for (i = 0; i < 3; i++) 
+        free(bookshelf[i]);
+    free(bookshelf);
 }
