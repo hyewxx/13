@@ -1,23 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+struct Book {
+    int number;
+    char title[10];
+};
 
 int main(void) {
-    char *pc = NULL;
-    int i = 0;
+    struct Book *p;
 
-    pc = (char*)malloc(100 * sizeof(char));
-    if (pc == NULL) {
+    p = (struct Book *)malloc(2 * sizeof(struct Book)); //p = malloc(2 * sizeof(struct Book)); 이렇게 써도 되나 type casting을 해준 버전
+    if (p == NULL) {
         printf("error\n");
-        exit(1);
+        return 1;
     }
 
-    for (i = 0; i < 26; i++) {
-        pc[i] = 'a' + i;
-    }
-    pc[i] = 0;              // i가 26이 된 상태 → pc[26]에 널 문자('\0', ASCII 0) 저장
+    p->number = 1;
+    strcpy(p->title, "C Programming");
 
-    printf("%s\n", pc);     // "abcdefghijklmnopqrstuvwxyz" 출력
-    free(pc);
+    (p + 1)->number = 2;
+    strcpy((p + 1)->title, "Electronics");
+
+    printf("Book 1: %d, %s\n", p->number, p->title);
+    printf("Book 2: %d, %s\n", (p + 1)->number, (p + 1)->title);
     
+    free(p);
     return 0;
 }
